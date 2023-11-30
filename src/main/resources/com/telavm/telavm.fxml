@@ -4,50 +4,83 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.input.KeyCodeCombination?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<?import org.fxmisc.richtext.CodeArea?>
+<AnchorPane fx:id="TopLevelElement" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="750.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.telavm.Controller">
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="623.0" prefWidth="933.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.telavm.Controller">
-    <CodeArea fx:id="codeArea" layoutX="25.0" layoutY="58.0" prefHeight="371.0" prefWidth="644.0" />
-    <MenuBar layoutY="2.0" prefHeight="25.0" prefWidth="933.0">
-        <Menu mnemonicParsing="false" text="File">
-            <MenuItem mnemonicParsing="false" onAction="#exitMethod" text="Close" />
-         <MenuItem mnemonicParsing="false" onAction="#openMethod" text="Open">
-            <accelerator>
-               <KeyCodeCombination alt="UP" code="O" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-            </accelerator>
-         </MenuItem>
-         <MenuItem mnemonicParsing="false" onAction="#saveOrNewMethod" text="Save As">
-            <accelerator>
-               <KeyCodeCombination alt="DOWN" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-            </accelerator>
-         </MenuItem>
-         <MenuItem mnemonicParsing="false" onAction="#saveMethod" text="Save">
-            <accelerator>
-               <KeyCodeCombination alt="UP" code="S" control="DOWN" meta="UP" shift="UP" shortcut="UP" />
-            </accelerator>
-         </MenuItem>
+    <MenuBar fx:id="Menubar" layoutY="2.0" prefHeight="25.0" prefWidth="1000.0">
+        <Menu fx:id="MainMenu" mnemonicParsing="false" text="File">
+            <MenuItem fx:id="OpenFileMenuItem" mnemonicParsing="false" onAction="#openMethod" text="Open File" />
         </Menu>
     </MenuBar>
-    <TextArea fx:id="Log" layoutX="25.0" layoutY="468.0" prefHeight="121.0" prefWidth="644.0" />
-    <Text layoutX="29.0" layoutY="456.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Log:" wrappingWidth="33.34765625" />
-    <Text layoutX="29.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Código:" />
-    <Button layoutX="714.0" layoutY="489.0" mnemonicParsing="false" onAction="#runMethod" prefHeight="80.0" prefWidth="153.0" text="Executar">
+
+    <TableView fx:id="codeArea" layoutX="14.0" layoutY="65.0" minWidth="700.0" prefHeight="523.0" prefWidth="750.0">
+        <columns>
+            <TableColumn minWidth="120.0" prefWidth="75.0" text="Linha" />
+            <TableColumn minWidth="120.0" prefWidth="75.0" text="Instrução" />
+            <TableColumn minWidth="120.0" prefWidth="75.0" text="Atributo 1" />
+            <TableColumn minWidth="120.0" prefWidth="75.0" text="Atributo 2" />
+            <TableColumn minWidth="270.0" prefWidth="211.0" text="Comentário" />
+        </columns>
+    </TableView>
+
+    <TableView fx:id="memory" layoutX="783.0" layoutY="65.0" prefHeight="523.0" prefWidth="200.0">
+        <columns>
+            <TableColumn prefWidth="100.0" text="Endereço" />
+            <TableColumn prefWidth="100.0" text="Valor" />
+        </columns>
+    </TableView>
+    <Text layoutX="14.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Código de máquina">
       <font>
-         <Font size="20.0" />
+         <Font size="15.0" />
+      </font></Text>
+   <Text layoutX="783.0" layoutY="60.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Memória:">
+      <font>
+         <Font size="15.0" />
+      </font>
+   </Text>
+
+    <TextArea fx:id="output" layoutX="14.0" layoutY="622.0" prefHeight="99.0" prefWidth="209.0">
+      <font>
+         <Font name="Fira Code Regular" size="15.0" />
+      </font></TextArea>
+    <Text layoutX="14.0" layoutY="618.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Saída de Dados">
+      <font>
+         <Font size="15.0" />
+      </font></Text>
+    <Pane layoutX="317.0" layoutY="622.0" prefHeight="99.0" prefWidth="165.0">
+   
+              <RadioButton fx:id="PassoButton" layoutX="6.0" layoutY="44.0" mnemonicParsing="false" text="Passo a Passo">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </RadioButton>
+        <RadioButton fx:id="NormalButton" layoutX="6.0" layoutY="14.0" mnemonicParsing="false" text="Normal">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </RadioButton>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Mode de Execução">
+         <font>
+            <Font size="15.0" />
+         </font>
+      </Text>
+    </Pane>
+    <Button fx:id="executeButton" layoutX="555.0" layoutY="627.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="176.0" text="Executar">
+      <font>
+         <Font size="25.0" />
       </font></Button>
-   <TableView layoutX="691.0" layoutY="58.0" prefHeight="371.0" prefWidth="200.0">
-     <columns>
-       <TableColumn minWidth="100.0" prefWidth="94.0" text="Endereço" />
-       <TableColumn minWidth="100.0" text="Valor" />
-     </columns>
-   </TableView>
-   <Text layoutX="691.0" layoutY="49.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Memory:" />
+    <Button fx:id="stopButton" layoutX="764.0" layoutY="627.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="176.0" text="Parar">
+      <font>
+         <Font size="25.0" />
+      </font></Button>
+
+
 </AnchorPane>
