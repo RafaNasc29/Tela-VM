@@ -1,8 +1,9 @@
 module com.telavm.telavm {
     requires javafx.controls;
     requires javafx.fxml;
+    requires richtextfx.fat;
 
 
-    opens com.telavm.telavm to javafx.fxml;
-    exports com.telavm.telavm;
+    opens com.telavm to javafx.fxml;
+    exports com.telavm;
 }
