@@ -64,9 +64,6 @@ public class Controller {
                     dado.setParameter1(parts[1]);
                     dado.setParameter2(parts[2]);
                 }
-//                if (parts.length >= 4) {
-//                    dado.setParameter2(parts[3]);
-//                }
 
                 data.add(dado);
             }
@@ -91,6 +88,5 @@ public class Controller {
         selectedFile = chooser.showOpenDialog(stage);
 
         initializeTable();
-//        codeArea.replaceText(sb.toString());                              TEM QUE MUDAR!!!
     }
 }
