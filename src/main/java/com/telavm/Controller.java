@@ -81,7 +81,7 @@ public class Controller {
 
     }
 
-    public void openMethod() throws IOException {
+    public void openMethod() {
         Stage stage = new Stage();
 
         FileChooser chooser = new FileChooser();
