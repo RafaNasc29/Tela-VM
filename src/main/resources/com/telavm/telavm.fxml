@@ -27,11 +27,11 @@
 
     <TableView fx:id="codeArea" layoutX="14.0" layoutY="65.0" minWidth="700.0" prefHeight="523.0" prefWidth="750.0">
         <columns>
-            <TableColumn fx:id="line" minWidth="120.0" prefWidth="75.0" text="Linha" />
-            <TableColumn fx:id="command" minWidth="120.0" prefWidth="75.0" text="Instrução" />
-            <TableColumn fx:id="param1" minWidth="120.0" prefWidth="75.0" text="Atributo 1" />
-            <TableColumn fx:id="param2" minWidth="120.0" prefWidth="75.0" text="Atributo 2" />
-            <TableColumn fx:id="comment" minWidth="270.0" prefWidth="211.0" text="Comentário" />
+            <TableColumn fx:id="label" minWidth="120.0" prefWidth="75.0" resizable="false" sortable="false" text="Rótulo" />
+            <TableColumn fx:id="command" minWidth="120.0" prefWidth="75.0" sortable="false" text="Instrução" />
+            <TableColumn fx:id="param1" minWidth="120.0" prefWidth="75.0" sortable="false" text="Atributo 1" />
+            <TableColumn fx:id="param2" minWidth="120.0" prefWidth="75.0" sortable="false" text="Atributo 2" />
+            <TableColumn fx:id="comment" minWidth="270.0" prefWidth="211.0" sortable="false" text="Comentário" />
         </columns>
     </TableView>
 

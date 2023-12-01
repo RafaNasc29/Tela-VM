@@ -4,22 +4,22 @@ import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
 public class Dado {
-    private StringProperty line = new SimpleStringProperty(this, "line");
+    private StringProperty label = new SimpleStringProperty(this, "label");
     private StringProperty command = new SimpleStringProperty(this, "command");
     private StringProperty param1 = new SimpleStringProperty(this, "param1");
     private StringProperty param2 = new SimpleStringProperty(this, "param2");
     private StringProperty comment = new SimpleStringProperty(this, "comment");
 
-    public String getLine() {
-        return line.get();
+    public String getlabel() {
+        return label.get();
     }
 
-    public StringProperty lineProperty() {
-        return line;
+    public StringProperty labelProperty() {
+        return label;
     }
 
-    public void setLine(String line) {
-        this.line.set(line);
+    public void setlabel(String label) {
+        this.label.set(label);
     }
 
     public String getCommand() {

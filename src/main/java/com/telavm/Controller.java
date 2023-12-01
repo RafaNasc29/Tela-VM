@@ -17,7 +17,7 @@ public class Controller {
     @FXML
     private TableView<Dado> codeArea;
     @FXML
-    private TableColumn<Dado, String> line;
+    private TableColumn<Dado, String> label;
     @FXML
     private TableColumn<Dado, String> command;
     @FXML
@@ -29,7 +29,7 @@ public class Controller {
 
     @FXML
     public void initializeTable() {
-        line.setCellValueFactory(cellData -> cellData.getValue().lineProperty());
+        label.setCellValueFactory(cellData -> cellData.getValue().labelProperty());
         command.setCellValueFactory(cellData -> cellData.getValue().commandProperty());
         param1.setCellValueFactory(cellData -> cellData.getValue().param1Property());
         param2.setCellValueFactory(cellData -> cellData.getValue().param2Property());
@@ -45,21 +45,21 @@ public class Controller {
                 Dado dado = new Dado();
 
                 if (line.startsWith(" ") && parts.length >= 1) {
-                    dado.setLine("");
+                    dado.setlabel("");
                     dado.setCommand(parts[0]);
                 }else if (parts.length >= 1) {
-                    dado.setLine(parts[0]);
+                    dado.setlabel(parts[0]);
                 }
                 if (line.startsWith(" ") && parts.length >= 2) {
-                    dado.setLine("");
+                    dado.setlabel("");
                     dado.setCommand(parts[0]);
                     dado.setParameter1(parts[1]);
                 }else if (parts.length >= 2){
-                    dado.setLine(parts[0]);
+                    dado.setlabel(parts[0]);
                     dado.setCommand(parts[1]);
                 }
                 if (line.startsWith(" ") && parts.length >= 3) {
-                    dado.setLine("");
+                    dado.setlabel("");
                     dado.setCommand(parts[0]);
                     dado.setParameter1(parts[1]);
                     dado.setParameter2(parts[2]);
