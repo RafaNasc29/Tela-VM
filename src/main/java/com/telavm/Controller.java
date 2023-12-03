@@ -3,6 +3,7 @@ package com.telavm;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.stage.FileChooser;
@@ -26,6 +27,7 @@ public class Controller {
     private TableColumn<Dado, String> param2;
 //    @FXML
 //    private TableColumn<Dado, String> comment;
+    private MaquinaVirtual maquinaVirtual;
 
     @FXML
     public void initializeTable() {
@@ -74,11 +76,12 @@ public class Controller {
         codeArea.setItems(data);
     }
 
+    @FXML
     public void runMethod() throws IOException {
-
+        maquinaVirtual.execute();
     }
 
-    public void openMethod() {
+    public void openMethod() throws IOException {
         Stage stage = new Stage();
 
         FileChooser chooser = new FileChooser();
@@ -86,7 +89,8 @@ public class Controller {
         chooser.setTitle("Open File");
 
         selectedFile = chooser.showOpenDialog(stage);
-
+        maquinaVirtual = new MaquinaVirtual(new LineNumberReader(new FileReader(selectedFile.getAbsolutePath())));
+        maquinaVirtual.loadPC();
         initializeTable();
     }
 }
