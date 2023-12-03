@@ -85,7 +85,12 @@ public class Controller {
 
     @FXML
     public void runMethod() throws IOException {
-        maquinaVirtual.execute();
+        if (output == null){
+            maquinaVirtual.execute();
+        }else {
+            output.clear();
+            maquinaVirtual.execute();
+        }
     }
 
     public void openMethod() throws IOException {
