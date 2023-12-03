@@ -1,5 +1,7 @@
 package com.telavm;
 
+import javafx.scene.control.TextInputDialog;
+
 import java.io.IOException;
 import java.io.LineNumberReader;
 import java.util.ArrayList;
@@ -176,7 +178,7 @@ public class MaquinaVirtual {
             } else if (instrucao.getComando().equals("DALLOC")) {
                 int op1 = Integer.parseInt(instrucao.getParameter1());
                 int op2 = Integer.parseInt(instrucao.getParameter2());
-                for (int k = 0; k < op2; k++) {
+                for (int k = op2-1; k > -1 ; k--) {
                     memory[op1 + k] = memory[memory_pointer];
                     memory_pointer -= 1;
                 }
@@ -188,14 +190,18 @@ public class MaquinaVirtual {
                 pc = memory[memory_pointer] - 1;
                 memory_pointer -= 1;
             } else if (instrucao.getComando().equals("RETURNF")) {
-                pc = memory[memory_pointer];
+                pc = memory[memory_pointer] - 1;
 
                 memory[memory_pointer] = memory[0];
             } else if (instrucao.getComando().equals("RD")) {
-                Scanner input = new Scanner(System.in);
-                memory[memory_pointer] = Integer.parseInt(input.nextLine());
+                TextInputDialog td = new TextInputDialog();
+                td.showAndWait();
+
+                memory_pointer+=1;
+                memory[memory_pointer] = Integer.parseInt(td.getEditor().getText());
             } else if (instrucao.getComando().equals("PRN")) {
                 System.out.println(memory[memory_pointer]);
+                memory_pointer-=1;
             }
         }
     }
