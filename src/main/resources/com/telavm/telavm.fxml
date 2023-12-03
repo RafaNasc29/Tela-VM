@@ -35,7 +35,7 @@
         </columns>
     </TableView>
 
-    <TableView fx:id="memory" layoutX="783.0" layoutY="65.0" prefHeight="523.0" prefWidth="200.0">
+    <TableView id="memoria" fx:id="memory" layoutX="783.0" layoutY="65.0" prefHeight="523.0" prefWidth="200.0">
         <columns>
             <TableColumn prefWidth="100.0" text="Endereço" />
             <TableColumn prefWidth="100.0" text="Valor" />
@@ -77,7 +77,7 @@
          </font>
       </Text>
     </Pane>
-    <Button fx:id="executeButton" onAction="#runMethod" layoutX="555.0" layoutY="627.0" mnemonicParsing="false" prefHeight="75.0" prefWidth="176.0" text="Executar">
+    <Button fx:id="executeButton" layoutX="555.0" layoutY="627.0" mnemonicParsing="false" onAction="#runMethod" prefHeight="75.0" prefWidth="176.0" text="Executar">
       <font>
          <Font size="25.0" />
       </font></Button>
