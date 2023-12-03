@@ -84,7 +84,7 @@ public class Controller {
     }
 
     @FXML
-    public void runMethod() throws IOException {
+    public void runMethod() {
         if (output == null){
             maquinaVirtual.execute();
         }else {
@@ -305,10 +305,6 @@ public class Controller {
                     memory_pointer-=1;
                 }
             }
-        }
-
-        public void setLr(LineNumberReader lr) {
-            this.lr = lr;
         }
     }
 }

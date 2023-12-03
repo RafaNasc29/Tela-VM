@@ -7,7 +7,6 @@ import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Scanner;
 
 public class MaquinaVirtual {
     private LineNumberReader lr;
@@ -204,9 +203,5 @@ public class MaquinaVirtual {
                 memory_pointer-=1;
             }
         }
-    }
-
-    public void setLr(LineNumberReader lr) {
-        this.lr = lr;
     }
 }
