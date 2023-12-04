@@ -4,7 +4,6 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
@@ -111,7 +110,7 @@ public class Controller {
     }
 
     public class MaquinaVirtual {
-        private LineNumberReader lr;
+        private final LineNumberReader lr;
         private List<Instrucao> program;
         private HashMap<String, Integer> labelMemory;
         private Integer[] memory;
