@@ -28,7 +28,9 @@ public class Controller {
     @FXML
     private TableColumn<Dado, String> param2;
     @FXML
-    public TextArea output;
+    private TextArea output;
+    @FXML
+    private ToggleGroup radioButtons;
 
 //    @FXML
 //    private TableColumn<Dado, String> comment;
@@ -85,11 +87,16 @@ public class Controller {
 
     @FXML
     public void runMethod() {
-        if (output == null){
-            maquinaVirtual.execute();
-        }else {
+        if (maquinaVirtual.pc == 0){
             output.clear();
+        }
+        RadioButton selected = (RadioButton) radioButtons.getSelectedToggle();
+        if(selected.getText().equals("Normal")) {
             maquinaVirtual.execute();
+        }
+        else{
+            maquinaVirtual.stepBystep();
+            codeArea.getSelectionModel().select(maquinaVirtual.pc);
         }
     }
 
