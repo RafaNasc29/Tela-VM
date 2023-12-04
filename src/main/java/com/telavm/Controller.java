@@ -10,6 +10,7 @@ import javafx.stage.Stage;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -109,12 +110,14 @@ public class Controller {
         output.appendText(saida);
     }
 
+
     public class MaquinaVirtual {
         private final LineNumberReader lr;
         private List<Instrucao> program;
         private HashMap<String, Integer> labelMemory;
         private Integer[] memory;
-
+        private int pc;
+        private int memory_pointer;
         public MaquinaVirtual(LineNumberReader lr) {
             this.lr = lr;
         }
@@ -135,174 +138,185 @@ public class Controller {
             }
         }
 
-        public void execute() {
-            memory = new Integer[1000];
-            int memory_pointer = 0;
-            int pc = 0;
-            for (; pc < program.size(); pc++) {
-                Instrucao instrucao = program.get(pc);
-                if (instrucao.getComando().equals("START")) {
-                    memory_pointer += 1;
-                } else if (instrucao.getComando().equals("LDC")) {
-                    Integer op1 = Integer.parseInt(instrucao.getParameter1());
+        public void stepBystep(){
+            if(this.pc == 0){
+                memory = new Integer[100];
+                Arrays.fill(memory,0);
+                this.memory_pointer = 0;
+            }
+            Instrucao instrucao = program.get(this.pc);
+            if (instrucao.getComando().equals("START")) {
+                this.memory_pointer += 1;
+            } else if (instrucao.getComando().equals("LDC")) {
+                Integer op1 = Integer.parseInt(instrucao.getParameter1());
 
-                    memory_pointer += 1;
-                    memory[memory_pointer] = op1;
-                } else if (instrucao.getComando().equals("LDV")) {
-                    Integer op1 = Integer.parseInt(instrucao.getParameter1());
+                this.memory_pointer += 1;
+                memory[this.memory_pointer] = op1;
+            } else if (instrucao.getComando().equals("LDV")) {
+                Integer op1 = Integer.parseInt(instrucao.getParameter1());
 
-                    memory_pointer += 1;
-                    memory[memory_pointer] = memory[op1];
-                } else if (instrucao.getComando().equals("ADD")) {
-                    Integer op1 = memory[memory_pointer - 1];
-                    Integer op2 = memory[memory_pointer];
+                this.memory_pointer += 1;
+                memory[this.memory_pointer] = memory[op1];
+            } else if (instrucao.getComando().equals("ADD")) {
+                Integer op1 = memory[this.memory_pointer - 1];
+                Integer op2 = memory[this.memory_pointer];
 
-                    memory[memory_pointer - 1] = op1 + op2;
-                    memory_pointer -= 1;
-                } else if (instrucao.getComando().equals("SUB")) {
-                    Integer op1 = memory[memory_pointer - 1];
-                    Integer op2 = memory[memory_pointer];
+                memory[this.memory_pointer - 1] = op1 + op2;
+                this.memory_pointer -= 1;
+            } else if (instrucao.getComando().equals("SUB")) {
+                Integer op1 = memory[this.memory_pointer - 1];
+                Integer op2 = memory[this.memory_pointer];
 
-                    memory[memory_pointer - 1] = op1 - op2;
-                    memory_pointer -= 1;
-                } else if (instrucao.getComando().equals("MULT")) {
-                    Integer op1 = memory[memory_pointer - 1];
-                    Integer op2 = memory[memory_pointer];
+                memory[this.memory_pointer - 1] = op1 - op2;
+                this.memory_pointer -= 1;
+            } else if (instrucao.getComando().equals("MULT")) {
+                Integer op1 = memory[this.memory_pointer - 1];
+                Integer op2 = memory[this.memory_pointer];
 
-                    memory[memory_pointer - 1] = op1 * op2;
-                    memory_pointer -= 1;
-                } else if (instrucao.getComando().equals("DIVI")) {
-                    Integer op1 = memory[memory_pointer - 1];
-                    Integer op2 = memory[memory_pointer];
+                memory[this.memory_pointer - 1] = op1 * op2;
+                this.memory_pointer -= 1;
+            } else if (instrucao.getComando().equals("DIVI")) {
+                Integer op1 = memory[this.memory_pointer - 1];
+                Integer op2 = memory[this.memory_pointer];
 
-                    memory[memory_pointer - 1] = op1 / op2;
-                    memory_pointer -= 1;
-                } else if (instrucao.getComando().equals("INV")) {
-                    memory[memory_pointer] = -memory[memory_pointer];
-                } else if (instrucao.getComando().equals("AND")) {
-                    if (memory[memory_pointer - 1] == 1 && memory[memory_pointer] == 1) {
-                        memory[memory_pointer - 1] = 1;
-                    } else {
-                        memory[memory_pointer - 1] = 0;
-                    }
-                    memory_pointer -= 1;
-                } else if (instrucao.getComando().equals("OR")) {
-                    if (memory[memory_pointer - 1] == 1 || memory[memory_pointer] == 1) {
-                        memory[memory_pointer - 1] = 1;
-                    } else {
-                        memory[memory_pointer - 1] = 0;
-                    }
-                    memory_pointer -= 1;
-                } else if (instrucao.getComando().equals("NEG")) {
-                    memory[memory_pointer] = 1 - memory[memory_pointer];
-                } else if (instrucao.getComando().equals("CME")) {
-                    int op1 = memory[memory_pointer - 1];
-                    int op2 = memory[memory_pointer];
-
-                    if (op1 < op2) {
-                        memory[memory_pointer - 1] = 1;
-                    } else {
-                        memory[memory_pointer - 1] = 0;
-                    }
-                    memory_pointer -= 1;
-                } else if (instrucao.getComando().equals("CMA")) {
-                    int op1 = memory[memory_pointer - 1];
-                    int op2 = memory[memory_pointer];
-
-                    if (op1 > op2) {
-                        memory[memory_pointer - 1] = 1;
-                    } else {
-                        memory[memory_pointer - 1] = 0;
-                    }
-                    memory_pointer -= 1;
-                } else if (instrucao.getComando().equals("CEQ")) {
-                    int op1 = memory[memory_pointer - 1];
-                    int op2 = memory[memory_pointer];
-
-                    if (op1 == op2) {
-                        memory[memory_pointer - 1] = 1;
-                    } else {
-                        memory[memory_pointer - 1] = 0;
-                    }
-                    memory_pointer -= 1;
-                } else if (instrucao.getComando().equals("CDIF")) {
-                    int op1 = memory[memory_pointer - 1];
-                    int op2 = memory[memory_pointer];
-
-                    if (op1 != op2) {
-                        memory[memory_pointer - 1] = 1;
-                    } else {
-                        memory[memory_pointer - 1] = 0;
-                    }
-                    memory_pointer -= 1;
-                } else if (instrucao.getComando().equals("CMEQ")) {
-                    int op1 = memory[memory_pointer - 1];
-                    int op2 = memory[memory_pointer];
-
-                    if (op1 <= op2) {
-                        memory[memory_pointer - 1] = 1;
-                    } else {
-                        memory[memory_pointer - 1] = 0;
-                    }
-                    memory_pointer -= 1;
-                } else if (instrucao.getComando().equals("CMAQ")) {
-                    int op1 = memory[memory_pointer - 1];
-                    int op2 = memory[memory_pointer];
-
-                    if (op1 >= op2) {
-                        memory[memory_pointer - 1] = 1;
-                    } else {
-                        memory[memory_pointer - 1] = 0;
-                    }
-                    memory_pointer -= 1;
-                } else if (instrucao.getComando().equals("STR")) {
-                    int op = Integer.parseInt(instrucao.getParameter1());
-                    memory[op] = memory[memory_pointer];
-                    memory_pointer -= 1;
-                } else if (instrucao.getComando().equals("JMP")) {
-                    pc = labelMemory.get(instrucao.getParameter1());
-                } else if (instrucao.getComando().equals("JMPF")) {
-                    if (memory[memory_pointer] == 0) {
-                        pc = labelMemory.get(instrucao.getParameter1());
-                    }
-                    memory_pointer -= 1;
-                } else if (instrucao.getComando().equals("HLT")) {
-                    return;
-                } else if (instrucao.getComando().equals("ALLOC")) {
-                    int op1 = Integer.parseInt(instrucao.getParameter1());
-                    int op2 = Integer.parseInt(instrucao.getParameter2());
-                    for (int k = 0; k < op2; k++) {
-                        memory_pointer += 1;
-                        memory[memory_pointer] = memory[op1 + k];
-                    }
-                } else if (instrucao.getComando().equals("DALLOC")) {
-                    int op1 = Integer.parseInt(instrucao.getParameter1());
-                    int op2 = Integer.parseInt(instrucao.getParameter2());
-                    for (int k = op2-1; k > -1 ; k--) {
-                        memory[op1 + k] = memory[memory_pointer];
-                        memory_pointer -= 1;
-                    }
-                } else if (instrucao.getComando().equals("CALL")) {
-                    memory_pointer += 1;
-                    memory[memory_pointer] = pc + 1;
-                    pc = labelMemory.get(instrucao.getParameter1());
-                } else if (instrucao.getComando().equals("RETURN")) {
-                    pc = memory[memory_pointer] - 1;
-                    memory_pointer -= 1;
-                } else if (instrucao.getComando().equals("RETURNF")) {
-                    pc = memory[memory_pointer] - 1;
-
-                    memory[memory_pointer] = memory[0];
-                } else if (instrucao.getComando().equals("RD")) {
-                    TextInputDialog td = new TextInputDialog();
-                    td.showAndWait();
-
-                    memory_pointer+=1;
-                    memory[memory_pointer] = Integer.parseInt(td.getEditor().getText());
-                } else if (instrucao.getComando().equals("PRN")) {
-                    saida(memory[memory_pointer] + "\n");
-                    memory_pointer-=1;
+                memory[this.memory_pointer - 1] = op1 / op2;
+                this.memory_pointer -= 1;
+            } else if (instrucao.getComando().equals("INV")) {
+                memory[this.memory_pointer] = -memory[this.memory_pointer];
+            } else if (instrucao.getComando().equals("AND")) {
+                if (memory[this.memory_pointer - 1] == 1 && memory[this.memory_pointer] == 1) {
+                    memory[this.memory_pointer - 1] = 1;
+                } else {
+                    memory[this.memory_pointer - 1] = 0;
                 }
+                this.memory_pointer -= 1;
+            } else if (instrucao.getComando().equals("OR")) {
+                if (memory[this.memory_pointer - 1] == 1 || memory[this.memory_pointer] == 1) {
+                    memory[this.memory_pointer - 1] = 1;
+                } else {
+                    memory[this.memory_pointer - 1] = 0;
+                }
+                this.memory_pointer -= 1;
+            } else if (instrucao.getComando().equals("NEG")) {
+                memory[this.memory_pointer] = 1 - memory[this.memory_pointer];
+            } else if (instrucao.getComando().equals("CME")) {
+                int op1 = memory[this.memory_pointer - 1];
+                int op2 = memory[this.memory_pointer];
+
+                if (op1 < op2) {
+                    memory[this.memory_pointer - 1] = 1;
+                } else {
+                    memory[this.memory_pointer - 1] = 0;
+                }
+                this.memory_pointer -= 1;
+            } else if (instrucao.getComando().equals("CMA")) {
+                int op1 = memory[this.memory_pointer - 1];
+                int op2 = memory[this.memory_pointer];
+
+                if (op1 > op2) {
+                    memory[this.memory_pointer - 1] = 1;
+                } else {
+                    memory[this.memory_pointer - 1] = 0;
+                }
+                this.memory_pointer -= 1;
+            } else if (instrucao.getComando().equals("CEQ")) {
+                int op1 = memory[this.memory_pointer - 1];
+                int op2 = memory[this.memory_pointer];
+
+                if (op1 == op2) {
+                    memory[this.memory_pointer - 1] = 1;
+                } else {
+                    memory[this.memory_pointer - 1] = 0;
+                }
+                this.memory_pointer -= 1;
+            } else if (instrucao.getComando().equals("CDIF")) {
+                int op1 = memory[this.memory_pointer - 1];
+                int op2 = memory[this.memory_pointer];
+
+                if (op1 != op2) {
+                    memory[this.memory_pointer - 1] = 1;
+                } else {
+                    memory[this.memory_pointer - 1] = 0;
+                }
+                this.memory_pointer -= 1;
+            } else if (instrucao.getComando().equals("CMEQ")) {
+                int op1 = memory[this.memory_pointer - 1];
+                int op2 = memory[this.memory_pointer];
+
+                if (op1 <= op2) {
+                    memory[this.memory_pointer - 1] = 1;
+                } else {
+                    memory[this.memory_pointer - 1] = 0;
+                }
+                this.memory_pointer -= 1;
+            } else if (instrucao.getComando().equals("CMAQ")) {
+                int op1 = memory[this.memory_pointer - 1];
+                int op2 = memory[this.memory_pointer];
+
+                if (op1 >= op2) {
+                    memory[this.memory_pointer - 1] = 1;
+                } else {
+                    memory[this.memory_pointer - 1] = 0;
+                }
+                this.memory_pointer -= 1;
+            } else if (instrucao.getComando().equals("STR")) {
+                int op = Integer.parseInt(instrucao.getParameter1());
+                memory[op] = memory[this.memory_pointer];
+                this.memory_pointer -= 1;
+            } else if (instrucao.getComando().equals("JMP")) {
+                this.pc = labelMemory.get(instrucao.getParameter1());
+            } else if (instrucao.getComando().equals("JMPF")) {
+                if (memory[this.memory_pointer] == 0) {
+                    this.pc = labelMemory.get(instrucao.getParameter1());
+                }
+                this.memory_pointer -= 1;
+            } else if (instrucao.getComando().equals("HLT")) {
+                this.pc = 0;
+                return;
+            } else if (instrucao.getComando().equals("ALLOC")) {
+                int op1 = Integer.parseInt(instrucao.getParameter1());
+                int op2 = Integer.parseInt(instrucao.getParameter2());
+                for (int k = 0; k < op2; k++) {
+                    this.memory_pointer += 1;
+                    memory[this.memory_pointer] = memory[op1 + k];
+                }
+            } else if (instrucao.getComando().equals("DALLOC")) {
+                int op1 = Integer.parseInt(instrucao.getParameter1());
+                int op2 = Integer.parseInt(instrucao.getParameter2());
+                for (int k = op2-1; k > -1 ; k--) {
+                    memory[op1 + k] = memory[this.memory_pointer];
+                    this.memory_pointer -= 1;
+                }
+            } else if (instrucao.getComando().equals("CALL")) {
+                this.memory_pointer += 1;
+                memory[this.memory_pointer] = this.pc + 1;
+                this.pc = labelMemory.get(instrucao.getParameter1());
+            } else if (instrucao.getComando().equals("RETURN")) {
+                this.pc = memory[this.memory_pointer] - 1;
+                this.memory_pointer -= 1;
+            } else if (instrucao.getComando().equals("RETURNF")) {
+                this.pc = memory[this.memory_pointer] - 1;
+
+                memory[this.memory_pointer] = memory[0];
+            } else if (instrucao.getComando().equals("RD")) {
+                TextInputDialog td = new TextInputDialog();
+                td.showAndWait();
+
+                this.memory_pointer+=1;
+                memory[this.memory_pointer] = Integer.parseInt(td.getEditor().getText());
+            } else if (instrucao.getComando().equals("PRN")) {
+                saida(memory[this.memory_pointer] + "\n");
+                this.memory_pointer-=1;
+            }
+            this.pc += 1;
+        }
+
+        public void execute() {
+            this.pc = 0;
+            int aux = this.pc;
+            while(aux < program.size()-1) {
+                aux = this.pc;
+                stepBystep();
             }
         }
     }
