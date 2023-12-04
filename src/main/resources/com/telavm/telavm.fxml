@@ -35,10 +35,10 @@
         </columns>
     </TableView>
 
-    <TableView id="memoria" fx:id="memory" layoutX="783.0" layoutY="65.0" prefHeight="523.0" prefWidth="200.0">
+    <TableView fx:id="memoryTable" layoutX="783.0" layoutY="65.0" prefHeight="523.0" prefWidth="200.0">
         <columns>
-            <TableColumn prefWidth="100.0" text="Endereço" />
-            <TableColumn prefWidth="100.0" text="Valor" />
+            <TableColumn fx:id="addr" prefWidth="100.0" sortable="false" text="Endereço" />
+            <TableColumn fx:id="value" prefWidth="100.0" sortable="false" text="Valor" />
         </columns>
     </TableView>
     <Text layoutX="14.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Código de máquina">
