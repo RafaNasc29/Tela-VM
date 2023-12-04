@@ -15,6 +15,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Controller {
+
     @FXML
     private TableView<MemoryItem> memoryTable;
     @FXML
@@ -37,6 +38,17 @@ public class Controller {
     private TextArea output;
     @FXML
     private ToggleGroup radioButtons;
+
+
+
+    @FXML
+    public void initializeMemoryTable(){
+        addr.setCellValueFactory(cellData -> cellData.getValue().addressProperty());
+        value.setCellValueFactory(cellData -> cellData.getValue().valueProperty());
+
+        memoryTable.setItems(maquinaVirtual.getdataList());
+        memoryTable.refresh();
+    }
 
 //    @FXML
 //    private TableColumn<Dado, String> comment;
@@ -117,6 +129,7 @@ public class Controller {
         maquinaVirtual = new MaquinaVirtual(new LineNumberReader(new FileReader(selectedFile.getAbsolutePath())));
         maquinaVirtual.loadPC();
         initializeTable();
+        initializeMemoryTable();
     }
 
     public void saida(String saida){
@@ -352,9 +365,17 @@ public class Controller {
                 }
             }
 
+            updateMemoryTable();
             MemoryItem itemToUpdate = dataList.get(this.memory_pointer);
             itemToUpdate.setValue(String.valueOf(memory[this.memory_pointer]));
             this.pc += 1;
+        }
+
+        private void updateMemoryTable(){
+            dataList.clear();
+            for (int i = 0; i < memory.length; i++){
+                dataList.add(new MemoryItem(String.valueOf(i),String.valueOf(memory[i])));
+            }
         }
 
         public void execute() {
@@ -364,6 +385,10 @@ public class Controller {
                 aux = this.pc;
                 stepBystep();
             }
+        }
+
+        public ObservableList<MemoryItem> getdataList() {
+            return dataList;
         }
     }
 }

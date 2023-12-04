@@ -1,5 +1,7 @@
 package com.telavm;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.control.TextInputDialog;
 
 import java.io.IOException;
@@ -13,6 +15,22 @@ public class MaquinaVirtual {
     private List<Instrucao> program;
     private HashMap<String, Integer> labelMemory;
     private Integer[] memory;
+
+    private ObservableList<MemoryItem> dataList = FXCollections.observableArrayList();
+
+    public ObservableList<MemoryItem> getDataList(){
+        return dataList;
+    }
+
+    private void UpdateMemoryTable(){
+        dataList.clear();
+
+        for (int i= 0; i < memory.length; i++){
+            dataList.add(new MemoryItem(String.valueOf(i),String.valueOf(memory[i])));
+
+        }
+        UpdateMemoryTable();
+    }
 
     public MaquinaVirtual(LineNumberReader lr) {
         this.lr = lr;
