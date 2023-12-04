@@ -7,7 +7,6 @@ import javafx.scene.control.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -38,21 +37,18 @@ public class Controller {
     private TextArea output;
     @FXML
     private ToggleGroup radioButtons;
-
-
+    //    @FXML
+//    private TableColumn<Dado, String> comment;
+    private MaquinaVirtual maquinaVirtual;
 
     @FXML
-    public void initializeMemoryTable(){
+    public void initializeMemoryTable() {
         addr.setCellValueFactory(cellData -> cellData.getValue().addressProperty());
         value.setCellValueFactory(cellData -> cellData.getValue().valueProperty());
 
         memoryTable.setItems(maquinaVirtual.getdataList());
         memoryTable.refresh();
     }
-
-//    @FXML
-//    private TableColumn<Dado, String> comment;
-    private MaquinaVirtual maquinaVirtual;
 
     @FXML
     public void initializeTable() {
@@ -66,24 +62,24 @@ public class Controller {
 
         ObservableList<Dado> data = FXCollections.observableArrayList();
 
-        try(BufferedReader br = new BufferedReader(new FileReader(selectedFile))){
+        try (BufferedReader br = new BufferedReader(new FileReader(selectedFile))) {
             String line;
 
-            while ((line = br.readLine()) != null ) {
+            while ((line = br.readLine()) != null) {
                 String[] parts = line.trim().split("\\s+");
                 Dado dado = new Dado();
 
                 if (line.startsWith(" ") && parts.length >= 1) {
                     dado.setlabel("");
                     dado.setCommand(parts[0]);
-                }else if (parts.length >= 1) {
+                } else if (parts.length >= 1) {
                     dado.setlabel(parts[0]);
                 }
                 if (line.startsWith(" ") && parts.length >= 2) {
                     dado.setlabel("");
                     dado.setCommand(parts[0]);
                     dado.setParameter1(parts[1]);
-                }else if (parts.length >= 2){
+                } else if (parts.length >= 2) {
                     dado.setlabel(parts[0]);
                     dado.setCommand(parts[1]);
                 }
@@ -96,7 +92,7 @@ public class Controller {
 
                 data.add(dado);
             }
-        }catch (IOException e){
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
@@ -105,16 +101,16 @@ public class Controller {
 
     @FXML
     public void runMethod() {
-        if (maquinaVirtual.pc == 0){
+        if (maquinaVirtual.pc == 0) {
             output.clear();
         }
         RadioButton selected = (RadioButton) radioButtons.getSelectedToggle();
-        if(selected.getText().equals("Normal")) {
+        if (selected.getText().equals("Normal")) {
             maquinaVirtual.execute();
-        }
-        else{
-            maquinaVirtual.stepBystep();
+        } else {
+            maquinaVirtual.stepByStep();
             codeArea.getSelectionModel().select(maquinaVirtual.pc);
+            codeArea.scrollTo(maquinaVirtual.pc);
         }
     }
 
@@ -129,10 +125,10 @@ public class Controller {
         maquinaVirtual = new MaquinaVirtual(new LineNumberReader(new FileReader(selectedFile.getAbsolutePath())));
         maquinaVirtual.loadPC();
         initializeTable();
-        initializeMemoryTable();
+        //initializeMemoryTable();
     }
 
-    public void saida(String saida){
+    public void saida(String saida) {
         output.appendText(saida);
     }
 
@@ -144,7 +140,7 @@ public class Controller {
         private Integer[] memory;
         private int pc;
         private int memory_pointer;
-        private ObservableList<MemoryItem> dataList = FXCollections.observableArrayList();
+        private final ObservableList<MemoryItem> dataList = FXCollections.observableArrayList();
 
         public MaquinaVirtual(LineNumberReader lr) {
             this.lr = lr;
@@ -166,13 +162,14 @@ public class Controller {
             }
         }
 
-        public void stepBystep(){
-            if(this.pc == 0){
+        public void stepByStep() {
+            if (this.pc == 0) {
                 memory = new Integer[100];
-                Arrays.fill(memory,0);
+                Arrays.fill(memory, 0);
                 this.memory_pointer = 0;
                 addr.setCellValueFactory(cellData -> cellData.getValue().addressProperty());
                 value.setCellValueFactory(cellData -> cellData.getValue().valueProperty());
+                dataList.clear();
                 for (int i = 0; i < memory.length; i++) {
                     dataList.add(new MemoryItem(String.valueOf(i), String.valueOf(memory[i])));
                 }
@@ -308,6 +305,10 @@ public class Controller {
                 case "STR" -> {
                     int op = Integer.parseInt(instrucao.getParameter1());
                     memory[op] = memory[this.memory_pointer];
+
+                    MemoryItem itemToUpdate = dataList.get(op);
+                    itemToUpdate.setValue(String.valueOf(memory[this.memory_pointer]));
+
                     this.memory_pointer -= 1;
                 }
                 case "JMP" -> this.pc = labelMemory.get(instrucao.getParameter1());
@@ -330,6 +331,9 @@ public class Controller {
                     for (int k = 0; k < op2; k++) {
                         this.memory_pointer += 1;
                         memory[this.memory_pointer] = memory[op1 + k];
+
+                        MemoryItem itemToUpdate = dataList.get(this.memory_pointer);
+                        itemToUpdate.setValue(String.valueOf(memory[op1 + k]));
                     }
                 }
                 case "DALLOC" -> {
@@ -337,6 +341,10 @@ public class Controller {
                     int op2 = Integer.parseInt(instrucao.getParameter2());
                     for (int k = op2 - 1; k > -1; k--) {
                         memory[op1 + k] = memory[this.memory_pointer];
+
+                        MemoryItem itemToUpdate = dataList.get(op1 + k);
+                        itemToUpdate.setValue(String.valueOf(memory[this.memory_pointer]));
+
                         this.memory_pointer -= 1;
                     }
                 }
@@ -364,26 +372,29 @@ public class Controller {
                     this.memory_pointer -= 1;
                 }
             }
-
-            updateMemoryTable();
-            MemoryItem itemToUpdate = dataList.get(this.memory_pointer);
-            itemToUpdate.setValue(String.valueOf(memory[this.memory_pointer]));
+            if (!instrucao.getComando().equals("ALLOC") && !instrucao.getComando().equals("DALLOC") && !instrucao.getComando().equals("STR")) {
+                MemoryItem itemToUpdate = dataList.get(this.memory_pointer);
+                itemToUpdate.setValue(String.valueOf(memory[this.memory_pointer]));
+            }
+            memoryTable.refresh();
+            memoryTable.getSelectionModel().select(this.memory_pointer);
+            memoryTable.scrollTo(this.memory_pointer);
             this.pc += 1;
         }
 
-        private void updateMemoryTable(){
+        private void updateMemoryTable() {
             dataList.clear();
-            for (int i = 0; i < memory.length; i++){
-                dataList.add(new MemoryItem(String.valueOf(i),String.valueOf(memory[i])));
+            for (int i = 0; i < memory.length; i++) {
+                dataList.add(new MemoryItem(String.valueOf(i), String.valueOf(memory[i])));
             }
         }
 
         public void execute() {
             this.pc = 0;
             int aux = this.pc;
-            while(aux < program.size()-1) {
+            while (aux < program.size() - 1) {
                 aux = this.pc;
-                stepBystep();
+                stepByStep();
             }
         }
 
