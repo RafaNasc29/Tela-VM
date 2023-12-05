@@ -42,15 +42,6 @@ public class Controller {
     private MaquinaVirtual maquinaVirtual;
 
     @FXML
-    public void initializeMemoryTable() {
-        addr.setCellValueFactory(cellData -> cellData.getValue().addressProperty());
-        value.setCellValueFactory(cellData -> cellData.getValue().valueProperty());
-
-        memoryTable.setItems(maquinaVirtual.getdataList());
-        memoryTable.refresh();
-    }
-
-    @FXML
     public void initializeTable() {
 
         output.setEditable(false);
@@ -382,13 +373,6 @@ public class Controller {
             this.pc += 1;
         }
 
-        private void updateMemoryTable() {
-            dataList.clear();
-            for (int i = 0; i < memory.length; i++) {
-                dataList.add(new MemoryItem(String.valueOf(i), String.valueOf(memory[i])));
-            }
-        }
-
         public void execute() {
             this.pc = 0;
             int aux = this.pc;
@@ -396,10 +380,6 @@ public class Controller {
                 aux = this.pc;
                 stepByStep();
             }
-        }
-
-        public ObservableList<MemoryItem> getdataList() {
-            return dataList;
         }
     }
 }
